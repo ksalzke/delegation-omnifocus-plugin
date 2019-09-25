@@ -14,7 +14,7 @@ var _ = (function() {
 			"contactMethod",
 			"Contact Method",
 			followUpMethods,
-			null,
+			followUpMethods.map(tag => tag.name),
 			defaultFollowUpMethod
 		);
 
