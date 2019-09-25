@@ -40,9 +40,9 @@ var _ = (function() {
 
 			// create task and add relevant tags and link to original task
 			followUpTask = new Task(followUpTaskName, task.before);
+			followUpTask.addTag(selectedFollowUpMethod);
 			followUpTask.addTags(task.tags);
 			followUpTask.removeTag(waitingTag);
-			followUpTask.addTag(selectedFollowUpMethod);
 			followUpTask.note =
 				"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
 		});
