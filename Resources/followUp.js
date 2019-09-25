@@ -3,7 +3,6 @@ var _ = (function() {
 		config = this.delegationConfig;
 
 		// configure tags
-		followUpTag = config.followUpTag();
 		waitingTag = config.waitingTag();
 		followUpMethods = config.followUpMethods();
 		defaultFollowUpMethod = config.defaultFollowUpMethod();

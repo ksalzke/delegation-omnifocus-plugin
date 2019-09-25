@@ -1,13 +1,6 @@
 var _ = (function() {
 	var delegationConfig = new PlugIn.Library(new Version("1.0"));
 
-	delegationConfig.followUpTag = () => {
-		// edit the below line to configure the tag used to mark
-		// each task that is created as a 'follow up' action
-		// THIS SHOULD BE A TAG OBJECT
-		return tagNamed("Activity Type").tagNamed("Contact");
-	};
-
 	delegationConfig.waitingTag = () => {
 		// edit the below line to configure the tag used to mark
 		// tasks as waiting
@@ -19,7 +12,7 @@ var _ = (function() {
 		// edit the below line to configure the list of tags used
 		// to mark different communication methods (i.e. means of follow-up)
 		// THIS SHOULD BE AN ARRAY OF TAG OBJECTS
-		return delegationConfig.followUpTag().children;
+		return tagNamed("Activity Type").tagNamed("Contact").children;
 	};
 
 	delegationConfig.defaultFollowUpMethod = () => {
