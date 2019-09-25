@@ -12,5 +12,5 @@
 			"identifier": "secondScriptPlaceholder"
 		}
 	],
-	"libraries": []
+	"libraries": [{ "identifier": "delegationConfig" }]
 }

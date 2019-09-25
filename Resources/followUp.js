@@ -9,67 +9,64 @@
 	"shortLabel": "Follow Up"
 }*/
 var _ = (function() {
-  var action = new PlugIn.Action(function(selection, sender) {
-    // action code
-    // selection options: tasks, projects, folders, tags
+	var action = new PlugIn.Action(function(selection, sender) {
+		config = this.delegationConfig;
 
-    var followUpTag = tagNamed("Activity Type").tagNamed("Contact");
-    var waitingTag = tagNamed("Activity Type").tagNamed("⏳ Waiting");
-    var followUpMethods = followUpTag.children;
+		// configure tags
+		followUpTag = config.followUpTag();
+		waitingTag = config.waitingTag();
+		followUpMethods = config.followUpMethods();
+		defaultFollowUpMethod = config.defaultFollowUpMethod();
 
-    // show form to select follow up method
-    var inputForm = new Form();
+		// show form to select follow up method
+		var inputForm = new Form();
 
-    popupMenu = new Form.Field.Option(
-      "contactMethod",
-      "Contact Method",
-      followUpMethods,
-      null,
-      tagNamed("Activity Type")
-        .tagNamed("Contact")
-        .tagNamed("📧 Email")
-    );
+		popupMenu = new Form.Field.Option(
+			"contactMethod",
+			"Contact Method",
+			followUpMethods,
+			null,
+			defaultFollowUpMethod
+		);
 
-    inputForm.addField(popupMenu);
+		inputForm.addField(popupMenu);
 
-    // PRESENT THE FORM TO THE USER
-    formPrompt = "Select contact method:";
-    formPromise = inputForm.show(formPrompt, "Continue");
+		formPrompt = "Select contact method:";
+		formPromise = inputForm.show(formPrompt, "Continue");
 
-    // VALIDATE THE USER INPUT
-    inputForm.validate = function(formObject) {
-      validation = true;
-      return validation;
-    };
+		inputForm.validate = function(formObject) {
+			validation = true;
+			return validation;
+		};
 
-    // PROCESSING USING THE DATA EXTRACTED FROM THE FORM
-    formPromise.then(function(formObject) {
-      selectedFollowUpMethod = formObject.values["contactMethod"];
+		// PROCESSING USING THE DATA EXTRACTED FROM THE FORM
+		formPromise.then(function(formObject) {
+			selectedFollowUpMethod = formObject.values["contactMethod"];
 
-      var task = selection.tasks[0];
+			var task = selection.tasks[0];
 
-      followUpTaskName = `Follow up: ${task.name.replace("Waiting for: ", "")}`;
+			followUpTaskName = `Follow up: ${task.name.replace("Waiting for: ", "")}`;
 
-      var followUpTask = new Task(followUpTaskName, task.before);
-      followUpTask.addTags(task.tags);
-      followUpTask.removeTag(waitingTag);
-      followUpTask.addTag(selectedFollowUpMethod);
-      followUpTask.note =
-        "[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
-    });
+			var followUpTask = new Task(followUpTaskName, task.before);
+			followUpTask.addTags(task.tags);
+			followUpTask.removeTag(waitingTag);
+			followUpTask.addTag(selectedFollowUpMethod);
+			followUpTask.note =
+				"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
+		});
 
-    // PROMISE FUNCTION CALLED UPON FORM CANCELLATION
-    formPromise.catch(function(err) {
-      console.log("form cancelled", err.message);
-    });
-  });
+		// PROMISE FUNCTION CALLED UPON FORM CANCELLATION
+		formPromise.catch(function(err) {
+			console.log("form cancelled", err.message);
+		});
+	});
 
-  action.validate = function(selection, sender) {
-    // validation code
-    // selection options: tasks, projects, folders, tags
-    return selection.tasks.length === 1;
-  };
+	action.validate = function(selection, sender) {
+		// validation code
+		// selection options: tasks, projects, folders, tags
+		return selection.tasks.length === 1;
+	};
 
-  return action;
+	return action;
 })();
 _;
