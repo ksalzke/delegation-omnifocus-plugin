@@ -1,13 +1,3 @@
-/*{
-	"type": "action",
-	"targets": ["omnifocus"],
-	"author": "Kaitlin Salzke",
-	"identifier": "com.KaitlinSalzke.followUp",
-	"version": "1.0",
-	"description": "Adds a new task to ‘follow up’ a selected waiting task (inserting it before the selected task)",
-	"label": "Follow Up",
-	"shortLabel": "Follow Up"
-}*/
 var _ = (function() {
 	var action = new PlugIn.Action(function(selection, sender) {
 		config = this.delegationConfig;
@@ -39,15 +29,17 @@ var _ = (function() {
 			return validation;
 		};
 
-		// PROCESSING USING THE DATA EXTRACTED FROM THE FORM
+		// process results from form selection
 		formPromise.then(function(formObject) {
 			selectedFollowUpMethod = formObject.values["contactMethod"];
 
-			var task = selection.tasks[0];
+			task = selection.tasks[0];
 
+			// replace "Waiting for: " with "Follow up: " in task name
 			followUpTaskName = `Follow up: ${task.name.replace("Waiting for: ", "")}`;
 
-			var followUpTask = new Task(followUpTaskName, task.before);
+			// create task and add relevant tags and link to original task
+			followUpTask = new Task(followUpTaskName, task.before);
 			followUpTask.addTags(task.tags);
 			followUpTask.removeTag(waitingTag);
 			followUpTask.addTag(selectedFollowUpMethod);
@@ -55,15 +47,13 @@ var _ = (function() {
 				"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
 		});
 
-		// PROMISE FUNCTION CALLED UPON FORM CANCELLATION
+		// log error if form is cancelled
 		formPromise.catch(function(err) {
 			console.log("form cancelled", err.message);
 		});
 	});
 
 	action.validate = function(selection, sender) {
-		// validation code
-		// selection options: tasks, projects, folders, tags
 		return selection.tasks.length === 1;
 	};
 
