@@ -7,6 +7,9 @@ var _ = (function() {
 		followUpMethods = config.followUpMethods();
 		defaultFollowUpMethod = config.defaultFollowUpMethod();
 
+		// also remove tags that are children of waiting tag
+		waitingTags = waitingTag.children.concat(waitingTag);
+
 		// show form to select follow up method
 		var inputForm = new Form();
 
@@ -45,7 +48,7 @@ var _ = (function() {
 				followUpTask = new Task(followUpTaskName, task.before);
 				followUpTask.addTag(selectedFollowUpMethod);
 				followUpTask.addTags(task.tags);
-				followUpTask.removeTag(waitingTag);
+				followUpTask.removeTags(waitingTags);
 				followUpTask.note =
 					"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
 			});
