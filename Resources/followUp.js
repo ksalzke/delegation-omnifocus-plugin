@@ -32,18 +32,23 @@ var _ = (function() {
 		formPromise.then(function(formObject) {
 			selectedFollowUpMethod = formObject.values["contactMethod"];
 
-			task = selection.tasks[0];
+			tasks = selection.tasks;
 
-			// replace "Waiting for: " with "Follow up: " in task name
-			followUpTaskName = `Follow up: ${task.name.replace("Waiting for: ", "")}`;
+			tasks.forEach(task => {
+				// replace "Waiting for: " with "Follow up: " in task name
+				followUpTaskName = `Follow up: ${task.name.replace(
+					"Waiting for: ",
+					""
+				)}`;
 
-			// create task and add relevant tags and link to original task
-			followUpTask = new Task(followUpTaskName, task.before);
-			followUpTask.addTag(selectedFollowUpMethod);
-			followUpTask.addTags(task.tags);
-			followUpTask.removeTag(waitingTag);
-			followUpTask.note =
-				"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
+				// create task and add relevant tags and link to original task
+				followUpTask = new Task(followUpTaskName, task.before);
+				followUpTask.addTag(selectedFollowUpMethod);
+				followUpTask.addTags(task.tags);
+				followUpTask.removeTag(waitingTag);
+				followUpTask.note =
+					"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
+			});
 		});
 
 		// log error if form is cancelled
@@ -53,7 +58,7 @@ var _ = (function() {
 	});
 
 	action.validate = function(selection, sender) {
-		return selection.tasks.length === 1;
+		return selection.tasks.length >= 1;
 	};
 
 	return action;
