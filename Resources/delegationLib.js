@@ -1,9 +1,12 @@
 var _ = (function() {
 	var delegationLib = new PlugIn.Library(new Version("1.0"));
 
-	delegationLib.noteFollowUp = (task) => {
-        
-        // if 'Follow up' task, make a note on original task when followed up on
+	delegationLib.noteFollowUp = task => {
+		functionLibrary = PlugIn.find("com.KaitlinSalzke.functionLibrary").library(
+			"functionLibrary"
+		);
+
+		// if 'Follow up' task, make a note on original task when followed up on
 		if (/[fF]ollow up/.test(task.name)) {
 			originalTaskRegex = /\[FOLLOWUPON: omnifocus:\/\/\/task\/(.+)\]/g;
 			originalTaskRegexResult = originalTaskRegex.exec(task.note);
@@ -19,10 +22,7 @@ var _ = (function() {
 				}\n\nFollowed up ${now.toString()}`;
 			}
 		}
-        
 	};
-
-	
 
 	return delegationLib;
 })();
