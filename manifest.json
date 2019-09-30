@@ -6,13 +6,10 @@
 	"version": "1.0.0",
 	"actions": [
 		{
-			"identifier": "followUp"
-		},
-		{
-			"identifier": "secondScriptPlaceholder"
-		},
-		{
 			"identifier": "waitingFor"
+		},
+		{
+			"identifier": "followUp"
 		}
 	],
 	"libraries": [{ "identifier": "delegationConfig" }]
