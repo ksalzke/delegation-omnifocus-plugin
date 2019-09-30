@@ -12,8 +12,8 @@ var _ = (function() {
 			waitingForTaskName = `Waiting for: ${task.name}`;
 
 			// create task and add relevant tags
-			followUpTask = new Task(waitingForTaskName, task.before);
-			followUpTask.addTag(waitingTag);
+			waitingTask = new Task(waitingForTaskName, task.after);
+			waitingTask.addTag(waitingTag);
 		});
 	});
 
