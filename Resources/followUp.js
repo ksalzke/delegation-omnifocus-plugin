@@ -38,6 +38,9 @@ var _ = (function() {
 			tasks = selection.tasks;
 
 			tasks.forEach(task => {
+				// add parent action group
+				parentTask = new Task(task.name, task.before);
+
 				// replace "Waiting for: " with "Follow up: " in task name
 				followUpTaskName = `Follow up: ${task.name.replace(
 					"Waiting for: ",
@@ -45,12 +48,18 @@ var _ = (function() {
 				)}`;
 
 				// create task and add relevant tags and link to original task
-				followUpTask = new Task(followUpTaskName, task.before);
+				followUpTask = new Task(followUpTaskName, parentTask.beginning);
 				followUpTask.addTag(selectedFollowUpMethod);
 				followUpTask.addTags(task.tags);
 				followUpTask.removeTags(waitingTags);
 				followUpTask.note =
 					"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
+
+				// move original task inside group
+				moveTasks([task], followUpTask.after);
+
+				// make the group sequential
+				parentTask.sequential = true;
 			});
 		});
 
