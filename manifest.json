@@ -10,6 +10,9 @@
 		},
 		{
 			"identifier": "secondScriptPlaceholder"
+		},
+		{
+			"identifier": "waitingFor"
 		}
 	],
 	"libraries": [{ "identifier": "delegationConfig" }]
