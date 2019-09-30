@@ -10,6 +10,10 @@ var _ = (function() {
 		// also remove tags that are children of waiting tag
 		waitingTags = waitingTag.children.concat(waitingTag);
 
+		functionLibrary = PlugIn.find("com.KaitlinSalzke.functionLibrary").library(
+			"functionLibrary"
+		);
+
 		// show form to select follow up method
 		var inputForm = new Form();
 
@@ -38,8 +42,16 @@ var _ = (function() {
 			tasks = selection.tasks;
 
 			tasks.forEach(task => {
-				// add parent action group
-				parentTask = new Task(task.name, task.before);
+				// get parent task
+				parentTask = functionLibrary.getParent(task);
+
+				if (!/^Waiting for: /.test(parentTask.name)) {
+					// add parent action group
+					parentTask = new Task(task.name, task.before);
+				}
+
+				// move original task inside group
+				moveTasks([task], parentTask.ending);
 
 				// replace "Waiting for: " with "Follow up: " in task name
 				followUpTaskName = `Follow up: ${task.name.replace(
@@ -48,15 +60,12 @@ var _ = (function() {
 				)}`;
 
 				// create task and add relevant tags and link to original task
-				followUpTask = new Task(followUpTaskName, parentTask.beginning);
+				followUpTask = new Task(followUpTaskName, task.before);
 				followUpTask.addTag(selectedFollowUpMethod);
 				followUpTask.addTags(task.tags);
 				followUpTask.removeTags(waitingTags);
 				followUpTask.note =
 					"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
-
-				// move original task inside group
-				moveTasks([task], followUpTask.after);
 
 				// make the group sequential
 				parentTask.sequential = true;
