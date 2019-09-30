@@ -7,8 +7,11 @@ var _ = (function() {
 		followUpMethods = config.followUpMethods();
 		defaultFollowUpMethod = config.defaultFollowUpMethod();
 
+		// uninherited tags to be removed
+		uninheritedTags = config.uninheritedTags();
+
 		// also remove tags that are children of waiting tag
-		waitingTags = waitingTag.children.concat(waitingTag);
+		uninheritedTags = uninheritedTags.concat(waitingTag.children, waitingTag);
 
 		functionLibrary = PlugIn.find("com.KaitlinSalzke.functionLibrary").library(
 			"functionLibrary"
@@ -63,7 +66,7 @@ var _ = (function() {
 				followUpTask = new Task(followUpTaskName, task.before);
 				followUpTask.addTag(selectedFollowUpMethod);
 				followUpTask.addTags(task.tags);
-				followUpTask.removeTags(waitingTags);
+				followUpTask.removeTags(uninheritedTags);
 				followUpTask.note =
 					"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
 

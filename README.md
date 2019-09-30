@@ -19,9 +19,9 @@ This plug-in contains the following two actions:
 ## Waiting For
 This action can be run on one or more selected tasks and creates a new task after the selected task(s) whose:
 * name is the same as the original task's name, but with `Waiting for: ` prepended
-* tag is the `waitingTag` specified in the configuration file (currently this is `Activity Type: ⏳ Waiting` by default).
+* tag is the `waitingTag` specified in the configuration file (currently this is `Activity Type: ⏳ Waiting` by default.
 
-Note that any project tags will also be inherited.
+Note that any project tags will also be inherited, unless they are specified as `uninheritedTags` in the configuration file.
 
 ## Follow Up
 This action can be run on one or more selected tasks.
@@ -33,7 +33,10 @@ Then, for each selected task:
 2. Moves the task into the parent sequential action group.
 3. Creates a new task before the original task (and inside the action group) whose: 
 * name is the same as the original task's name, but with  `Follow up: ` prepended in place of `Waiting for: `.
-* tags are the same as the original task's tags, but with the selected follow-up method added and any waiting tags (the tag specified as `waitingTag` in the configuration file as well as any of its children) removed
+* tags are the same as the original task's tags (tags may also be inherited from a containing action group or project), but with the the following changes:
+    * the selected follow-up method is added 
+    * any waiting tags (the tag specified as `waitingTag` in the configuration file as well as any of its children) are removed
+    * any tags specified as `uninheritedTags` in the configuration file are removed
 * note is a link to the original task in the format `[FOLLOWUPON: omnifocus///task/taskid]`
 
 Note that the parent sequential action group is created so that the 'waiting for' task only becomes available after the follow-up task has been completed (or dropped or deleted), even in a parallel project or single-action list.

@@ -4,6 +4,7 @@ var _ = (function() {
 
 		// configure tags
 		waitingTag = config.waitingTag();
+		uninheritedTags = config.uninheritedTags();
 
 		tasks = selection.tasks;
 
@@ -14,6 +15,7 @@ var _ = (function() {
 			// create task and add relevant tags
 			waitingTask = new Task(waitingForTaskName, task.after);
 			waitingTask.addTag(waitingTag);
+			waitingTask.removeTags(uninheritedTags);
 		});
 	});
 

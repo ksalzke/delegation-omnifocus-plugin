@@ -25,6 +25,13 @@ var _ = (function() {
 			.tagNamed("📧 Email");
 	};
 
+	delegationConfig.uninheritedTags = () => {
+		// edit the below line to configure the list of tags that
+		// will NOT be inherited by 'follow up' or 'waiting' tasks
+		// THIS SHOULD BE AN ARRAY OF TAG OBJECTS
+		return [tagNamed("▵")];
+	};
+
 	return delegationConfig;
 })();
 _;
