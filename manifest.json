@@ -12,5 +12,8 @@
 			"identifier": "followUp"
 		}
 	],
-	"libraries": [{ "identifier": "delegationConfig" }]
+	"libraries": [
+		{ "identifier": "delegationConfig" },
+		{ "identifier": "delegationLib" }
+	]
 }

@@ -35,3 +35,24 @@ Then, for each selected task:
 * note is a link to the original task in the format `[FOLLOWUPON: omnifocus///task/taskid]`
 
 Note that the parent sequential action group is created so that the 'waiting for' task only becomes available after the follow-up task has been completed (or dropped or deleted), even in a parallel project or single-action list.
+
+# Functions
+
+This plugin also contains the following function within the `delegationLib` library:
+
+## noteFollowUp
+
+This function takes a task as input and if the task begins with `follow up` or `Follow up` it looks in the note of the task for a `[FOLLOWUPON]` tag of the type created by the `Follow Up` action.
+
+If one is found it adds a note to that original task indicating that the task has been followed up on the current time and date.
+
+It is hoped that in the future this will be able to be run automatically on the completion of a task, but currently the intention is that it will be run manually from a 'custom complete' action. It can be used as follows (given a task stored in variable `task`):
+
+```
+delegationPlugin = PlugIn.find("com.KaitlinSalzke.Delegation");
+	if (delegationPlugin !== null) {
+		delegationPlugin.library("delegationLib").noteFollowUp(task);
+	}
+```
+
+An example can be seen in the ['Custom Complete' action](https://github.com/ksalzke/miscellaneous-omnifocus-plugins/blob/master/customComplete.omnijs) in my [Miscellaneous OmniFocus Plugins](https://github.com/ksalzke/miscellaneous-omnifocus-plugins) repository.
