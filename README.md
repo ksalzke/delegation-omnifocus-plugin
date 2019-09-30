@@ -2,6 +2,12 @@
 
 This is an Omni Automation plug-in bundle for OmniFocus that provides 'waiting for' and 'follow up' actions. Further details of these actions are provided below.
 
+_Please note that Omni Automation for OmniFocus is still in development and details are subject to change before it officially ships. If you have questions, please refer to [Omni's Slack #automation channel](https://www.omnigroup.com/slack/)._
+
+_In addition, please note that all scripts on my GitHub account (or shared elsewhere) are works in progress. If you encounter any issues or have any suggestions please let me know--and do please make sure you backup your database before running scripts from a random amateur on the internet!)_
+
+_**Known issue:** These scripts do not currently appear to function correctly on tasks in the inbox._
+
 # Installation & Set-Up
 
 **Important note: for this plug-in bundle to work correctly, my [Function Library for OmniFocus](https://github.com/ksalzke/function-library-for-omnifocus) is also required and needs to be added to the plug-in folder separately.**
