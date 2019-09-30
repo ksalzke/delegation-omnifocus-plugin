@@ -54,10 +54,10 @@ var _ = (function() {
 				moveTasks([task], parentTask.ending);
 
 				// replace "Waiting for: " with "Follow up: " in task name
-				followUpTaskName = `Follow up: ${task.name.replace(
-					"Waiting for: ",
-					""
-				)}`;
+				followUpTaskName = task.name.replace(
+					/^(?:Waiting for: )*/,
+					"Follow up: "
+				);
 
 				// create task and add relevant tags and link to original task
 				followUpTask = new Task(followUpTaskName, task.before);
