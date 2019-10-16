@@ -48,6 +48,13 @@ var _ = (function() {
     }
   };
 
+  delegationConfig.showForm = () => {
+    // edit the below to configure whether a form is shown
+    // to edit the 'waiting for' task
+    // THIS SHOULD BE EITHER TRUE OR FALSE
+    return true;
+  };
+
   return delegationConfig;
 })();
 _;
