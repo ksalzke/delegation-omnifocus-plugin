@@ -55,6 +55,13 @@ var _ = (function() {
     return true;
   };
 
+  delegationConfig.defaultDeferDays = () => {
+    // edit the below to configure the number of days
+    // the 'waiting' task is deferred by default
+    // THIS SHOULD BE A NUMBER, OR NULL IF NO DEFER DATE IS DESIRED
+    return null;
+  };
+
   return delegationConfig;
 })();
 _;
