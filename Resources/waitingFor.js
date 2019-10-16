@@ -41,6 +41,9 @@ var _ = (function() {
         deferDate = null;
       }
 
+      // -- due date
+      dueDate = null;
+
       // if showForm is set to true in config, show form to edit task
       if (showForm === true) {
         var inputForm = new Form();
@@ -52,6 +55,8 @@ var _ = (function() {
         inputForm.addField(nameField);
         deferField = new Form.Field.Date("deferDate", "Defer date", deferDate);
         inputForm.addField(deferField);
+        dueField = new Form.Field.Date("dueDate", "Due date", null);
+        inputForm.addField(dueField);
         let formPrompt = "Adjust task details if needed";
         let buttonTitle = "Continue";
         formPromise = inputForm.show(formPrompt, buttonTitle);
@@ -61,6 +66,7 @@ var _ = (function() {
         await formPromise.then(formObject => {
           waitingForTaskName = formObject.values["taskName"];
           deferDate = formObject.values["deferDate"];
+          dueDate = formObject.values["dueDate"];
         });
       }
 
@@ -69,6 +75,7 @@ var _ = (function() {
       waitingTask.addTag(waitingTag);
       waitingTask.removeTags(uninheritedTags);
       waitingTask.deferDate = deferDate;
+      waitingTask.dueDate = dueDate;
     });
   });
 
