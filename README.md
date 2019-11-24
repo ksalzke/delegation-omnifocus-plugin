@@ -30,8 +30,12 @@ This action can be run on one or more selected tasks. For each task, it:
 
 1. Runs the actions configured in the configuration file (under `functionsForOriginalTaskBeforeWaiting`). By default, this runs the [`customComplete` function in the 'Custom Complete' library](https://github.com/ksalzke/custom-complete-omnifocus-plugin/blob/master/Resources/customCompleteLib.js) of my [Custom Complete OmniFocus Plugin](https://github.com/ksalzke/custom-complete-omnifocus-plugin), or, if that is not installed, simply marks the task as complete.
 2. Creates a new task after the selected task(s). Optionally (when the `showForm` setting in the configuration file is set to `true`), a form is shown to confirm or change the task's details, including its due date, before it is created. By default (in the form and also if the form is not shown), this task's:
-   * name is the same as the original task's name, but with `Waiting for: ` prepended
-   * tag is the `waitingTag` specified in the configuration file (currently this is `Activity Type: ⏳ Waiting` by default.
+   * name is the same as the original task's name, but with `Waiting for: ` prepended _unless_ the original tasks's name matches on of the patterns specified under `replacements` in the configuration file, in which case the specified replacement is used instead, e.g. by default:
+      | original task              | becomes...                                             |
+      | -------------------------- | ------------------------------------------------------ |
+      | Call Someone re something  | Waiting for: Someone to return phone call re something |
+      | Email Someone re something | Waiting for: Someone to reply to email about something |
+   * tag is the `waitingTag` specified in the configuration file (currently this is `Activity Type: ⏳ Waiting` by default)
    * defer date is the the date that is the number of days specified in the configuration file from today (e.g. if `defaultDeferDays` is `1`, the default defer date will be tomorrow); the user's default start time is used. By default this is set to `null` and there is no defer date set
 
 Note that any project tags will also be inherited, unless they are specified as `uninheritedTags` in the configuration file.

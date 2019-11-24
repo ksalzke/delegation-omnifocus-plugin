@@ -62,6 +62,18 @@ var _ = (function() {
     return null;
   };
 
+  delegationConfig.replacements = () => {
+    // edit the below to configure the text that is used to
+    // 'replace' the original task when the 'waiting for' action is run
+    // THIS SHOULD BE AN ARRAY OF 2-ITEM ARRAYS; IN EACH ARRAY,
+    // THE FIRST ITEM SHOULD BE A STRING OR REGULAR EXPRESSION
+    // AND THE SECOND A STRING (WHICH MAY CONTAIN REPLACEMENT PATTERNS)
+    return [
+      [/Call (.+) re (.+)/, "Waiting for: $1 to return phone call re $2"],
+      [/Email (.+) re (.+)/, "Waiting for: $1 to reply to email re $2"]
+    ];
+  };
+
   return delegationConfig;
 })();
 _;

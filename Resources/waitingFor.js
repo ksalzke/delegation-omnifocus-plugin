@@ -7,6 +7,7 @@ var _ = (function() {
     uninheritedTags = config.uninheritedTags();
     showForm = config.showForm();
     defaultDeferDays = config.defaultDeferDays();
+    replacements = config.replacements();
 
     functionLibrary = PlugIn.find("com.KaitlinSalzke.functionLibrary").library(
       "functionLibrary"
@@ -22,7 +23,19 @@ var _ = (function() {
 
       // set up defaults for new 'waiting' task
       // -- task name
-      waitingForTaskName = `Waiting for: ${task.name}`;
+      let waitingForTaskName = task.name;
+      for (let replacement of replacements) {
+        namePattern = replacement[0];
+        replacementText = replacement[1];
+        waitingForTaskName = waitingForTaskName.replace(
+          namePattern,
+          replacementText
+        );
+      }
+
+      if (waitingForTaskName == task.name) {
+        waitingForTaskName = `Waiting for: ${task.name}`;
+      }
 
       // -- defer date
       if (defaultDeferDays !== null) {
