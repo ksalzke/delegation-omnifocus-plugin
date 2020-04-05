@@ -1,90 +1,96 @@
 var _ = (function() {
-	var action = new PlugIn.Action(function(selection, sender) {
-		config = this.delegationConfig;
+  var action = new PlugIn.Action(function(selection, sender) {
+    config = this.delegationConfig;
 
-		// configure tags
-		waitingTag = config.waitingTag();
-		followUpMethods = config.followUpMethods();
-		defaultFollowUpMethod = config.defaultFollowUpMethod();
+    // configure tags
+    waitingTag = config.waitingTag();
+    followUpMethods = config.followUpMethods();
+    defaultFollowUpMethod = config.defaultFollowUpMethod();
 
-		// uninherited tags to be removed
-		uninheritedTags = config.uninheritedTags();
+    // uninherited tags to be removed
+    uninheritedTags = config.uninheritedTags();
 
-		// also remove tags that are children of waiting tag
-		uninheritedTags = uninheritedTags.concat(waitingTag.children, waitingTag);
+    // also remove tags that are children of waiting tag
+    uninheritedTags = uninheritedTags.concat(waitingTag.children, waitingTag);
 
-		functionLibrary = PlugIn.find("com.KaitlinSalzke.functionLibrary").library(
-			"functionLibrary"
-		);
+    functionLibrary = PlugIn.find("com.KaitlinSalzke.functionLibrary").library(
+      "functionLibrary"
+    );
 
-		// show form to select follow up method
-		var inputForm = new Form();
+    function addFollowUpTask(contactMethod) {
+      tasks = selection.tasks;
 
-		popupMenu = new Form.Field.Option(
-			"contactMethod",
-			"Contact Method",
-			followUpMethods,
-			followUpMethods.map(tag => tag.name),
-			defaultFollowUpMethod
-		);
+      tasks.forEach(task => {
+        // get parent task
+        parentTask = functionLibrary.getParent(task);
 
-		inputForm.addField(popupMenu);
+        if (!/^Waiting for: /.test(parentTask.name)) {
+          // add parent action group
+          parentTask = new Task(task.name, task.before);
+        }
 
-		formPrompt = "Select contact method:";
-		formPromise = inputForm.show(formPrompt, "Continue");
+        // move original task inside group
+        moveTasks([task], parentTask.ending);
 
-		inputForm.validate = function(formObject) {
-			validation = true;
-			return validation;
-		};
+        // replace "Waiting for: " with "Follow up: " in task name
+        followUpTaskName = task.name.replace(
+          /^(?:Waiting for: )*/,
+          "Follow up: "
+        );
 
-		// process results from form selection
-		formPromise.then(function(formObject) {
-			selectedFollowUpMethod = formObject.values["contactMethod"];
+        // create task and add relevant tags and link to original task
+        followUpTask = new Task(followUpTaskName, task.before);
+        followUpTask.addTag(contactMethod);
+        followUpTask.addTags(task.tags);
+        followUpTask.removeTags(uninheritedTags);
+        followUpTask.note =
+          "[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
 
-			tasks = selection.tasks;
+        // make the group sequential
+        parentTask.sequential = true;
+      });
+    }
 
-			tasks.forEach(task => {
-				// get parent task
-				parentTask = functionLibrary.getParent(task);
+    if (followUpMethods.length > 1) {
+      // show form to select follow up method
+      var inputForm = new Form();
+      popupMenu = new Form.Field.Option(
+        "contactMethod",
+        "Contact Method",
+        followUpMethods,
+        followUpMethods.map(tag => tag.name),
+        defaultFollowUpMethod
+      );
 
-				if (!/^Waiting for: /.test(parentTask.name)) {
-					// add parent action group
-					parentTask = new Task(task.name, task.before);
-				}
+      inputForm.addField(popupMenu);
 
-				// move original task inside group
-				moveTasks([task], parentTask.ending);
+      formPrompt = "Select contact method:";
+      formPromise = inputForm.show(formPrompt, "Continue");
 
-				// replace "Waiting for: " with "Follow up: " in task name
-				followUpTaskName = task.name.replace(
-					/^(?:Waiting for: )*/,
-					"Follow up: "
-				);
+      inputForm.validate = function(formObject) {
+        validation = true;
+        return validation;
+      };
 
-				// create task and add relevant tags and link to original task
-				followUpTask = new Task(followUpTaskName, task.before);
-				followUpTask.addTag(selectedFollowUpMethod);
-				followUpTask.addTags(task.tags);
-				followUpTask.removeTags(uninheritedTags);
-				followUpTask.note =
-					"[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
+      // process results from form selection
+      formPromise.then(function(formObject) {
+        selectedFollowUpMethod = formObject.values["contactMethod"];
+        addFollowUpTask(formObject.values["contactMethod"]);
+      });
+    } else {
+      addFollowUpTask(defaultFollowUpMethod);
+    }
 
-				// make the group sequential
-				parentTask.sequential = true;
-			});
-		});
+    // log error if form is cancelled
+    formPromise.catch(function(err) {
+      console.log("form cancelled", err.message);
+    });
+  });
 
-		// log error if form is cancelled
-		formPromise.catch(function(err) {
-			console.log("form cancelled", err.message);
-		});
-	});
+  action.validate = function(selection, sender) {
+    return selection.tasks.length >= 1;
+  };
 
-	action.validate = function(selection, sender) {
-		return selection.tasks.length >= 1;
-	};
-
-	return action;
+  return action;
 })();
 _;

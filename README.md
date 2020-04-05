@@ -43,7 +43,7 @@ Note that any project tags will also be inherited, unless they are specified as 
 ## Follow Up
 This action can be run on one or more selected tasks.
 
-It first prompts the user for a contact method to be used to follow up on the selected task(s). These are taken from the `followUpMethods` variable in the configuration file and by default are any children of the `Activity Type: Contact` tag.
+If more than one 'contact method' tag is listed in `followUpMethods` in the configuration file, this first prompts the user to select one of these to be applied. (By default, these are any children of the `Activity Type: Contact` tag).
 
 Then, for each selected task:
 1. If the task is not already contained within such an action group, creates a sequential action group with the same name as the selected task(s).
