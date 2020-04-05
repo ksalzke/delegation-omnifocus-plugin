@@ -1,5 +1,5 @@
-var _ = (function() {
-  var action = new PlugIn.Action(function(selection, sender) {
+(() => {
+  var action = new PlugIn.Action(function (selection, sender) {
     config = this.delegationConfig;
 
     // configure tags
@@ -20,7 +20,7 @@ var _ = (function() {
     function addFollowUpTask(contactMethod) {
       tasks = selection.tasks;
 
-      tasks.forEach(task => {
+      tasks.forEach((task) => {
         // get parent task
         parentTask = functionLibrary.getParent(task);
 
@@ -58,7 +58,7 @@ var _ = (function() {
         "contactMethod",
         "Contact Method",
         followUpMethods,
-        followUpMethods.map(tag => tag.name),
+        followUpMethods.map((tag) => tag.name),
         defaultFollowUpMethod
       );
 
@@ -67,13 +67,13 @@ var _ = (function() {
       formPrompt = "Select contact method:";
       formPromise = inputForm.show(formPrompt, "Continue");
 
-      inputForm.validate = function(formObject) {
+      inputForm.validate = function (formObject) {
         validation = true;
         return validation;
       };
 
       // process results from form selection
-      formPromise.then(function(formObject) {
+      formPromise.then(function (formObject) {
         selectedFollowUpMethod = formObject.values["contactMethod"];
         addFollowUpTask(formObject.values["contactMethod"]);
       });
@@ -82,15 +82,14 @@ var _ = (function() {
     }
 
     // log error if form is cancelled
-    formPromise.catch(function(err) {
+    formPromise.catch(function (err) {
       console.log("form cancelled", err.message);
     });
   });
 
-  action.validate = function(selection, sender) {
+  action.validate = function (selection, sender) {
     return selection.tasks.length >= 1;
   };
 
   return action;
 })();
-_;

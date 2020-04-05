@@ -1,5 +1,5 @@
-var _ = (function() {
-  var action = new PlugIn.Action(function(selection, sender) {
+(() => {
+  var action = new PlugIn.Action(function (selection, sender) {
     config = this.delegationConfig;
 
     // configuration
@@ -15,9 +15,9 @@ var _ = (function() {
 
     tasks = selection.tasks;
 
-    asyncForEach(tasks, async task => {
+    asyncForEach(tasks, async (task) => {
       // do functions set up in config file first
-      config.functionsForOriginalTaskBeforeWaiting().forEach(func => {
+      config.functionsForOriginalTaskBeforeWaiting().forEach((func) => {
         func(task);
       });
 
@@ -73,10 +73,10 @@ var _ = (function() {
         let formPrompt = "Adjust task details if needed";
         let buttonTitle = "Continue";
         formPromise = inputForm.show(formPrompt, buttonTitle);
-        inputForm.validate = formObject => {
+        inputForm.validate = (formObject) => {
           return true;
         };
-        await formPromise.then(formObject => {
+        await formPromise.then((formObject) => {
           waitingForTaskName = formObject.values["taskName"];
           deferDate = formObject.values["deferDate"];
           dueDate = formObject.values["dueDate"];
@@ -92,13 +92,12 @@ var _ = (function() {
     });
   });
 
-  action.validate = function(selection, sender) {
+  action.validate = function (selection, sender) {
     return selection.tasks.length >= 1;
   };
 
   return action;
 })();
-_;
 
 async function asyncForEach(array, callback) {
   for (let index = 0; index < array.length; index++) {

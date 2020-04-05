@@ -1,4 +1,4 @@
-var _ = (function() {
+(() => {
   var delegationConfig = new PlugIn.Library(new Version("1.0"));
 
   delegationConfig.waitingTag = () => {
@@ -20,9 +20,7 @@ var _ = (function() {
     // method that should be selected in the form
     // THIS SHOULD BE A TAG OBJECT THAT IS INCLUDED IN THE
     // FOLLOW UP METHODS ABOVE
-    return tagNamed("Activity Type")
-      .tagNamed("Contact")
-      .tagNamed("📧 Email");
+    return tagNamed("Activity Type").tagNamed("Contact").tagNamed("📧 Email");
   };
 
   delegationConfig.uninheritedTags = () => {
@@ -41,7 +39,7 @@ var _ = (function() {
     if (customCompletePlugin !== null) {
       return [customCompletePlugin.library("customCompleteLib").customComplete];
     } else {
-      basicCompleteFunction = task => {
+      basicCompleteFunction = (task) => {
         task.markComplete();
       };
       return [basicCompleteFunction];
@@ -70,10 +68,9 @@ var _ = (function() {
     // AND THE SECOND A STRING (WHICH MAY CONTAIN REPLACEMENT PATTERNS)
     return [
       [/Call (.+) re (.+)/, "Waiting for: $1 to return phone call re $2"],
-      [/Email (.+) re (.+)/, "Waiting for: $1 to reply to email re $2"]
+      [/Email (.+) re (.+)/, "Waiting for: $1 to reply to email re $2"],
     ];
   };
 
   return delegationConfig;
 })();
-_;
