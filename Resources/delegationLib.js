@@ -47,6 +47,8 @@
         followUpTask.removeTags(uninheritedTags);
         followUpTask.note =
           "[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
+        followUpTask.dueDate = task.effectiveDueDate;
+        followUpTask.flagged = task.effectiveFlagged;
 
         // make the group sequential
         parentTask.sequential = true;

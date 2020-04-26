@@ -68,6 +68,8 @@ Then, for each task in the array:
       * any waiting tags (the tag specified as `waitingTag` in the configuration file as well as any of its children) are removed
       * any tags specified as `uninheritedTags` in the configuration file are removed
    * note is a link to the original task in the format `[FOLLOWUPON: omnifocus///task/taskid]`
+   * status is flagged if the original task was flagged
+   * due date is the same as the original task's effective due date
 
 Note that the parent sequential action group is created so that the 'waiting for' task only becomes available after the follow-up task has been completed (or dropped or deleted), even in a parallel project or single-action list.
 
