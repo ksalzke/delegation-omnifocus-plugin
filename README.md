@@ -44,6 +44,10 @@ Note that any project tags will also be inherited, unless they are specified as 
 
 This action simply runs the `followUp` function (below) on one or more selected tasks.
 
+## Follow Up Items Due Today
+
+This action simply runs the `followUpDueToday` function (below).
+
 # Functions
 
 This plugin also contains the following function within the `delegationLib` library:
@@ -66,6 +70,12 @@ Then, for each task in the array:
    * note is a link to the original task in the format `[FOLLOWUPON: omnifocus///task/taskid]`
 
 Note that the parent sequential action group is created so that the 'waiting for' task only becomes available after the follow-up task has been completed (or dropped or deleted), even in a parallel project or single-action list.
+
+## followUpDueToday
+
+This function takes no parameters.
+
+It checks all remaining tasks tagged with the `waitingTag` specified in the configuration file and, if they are due today, runs the `followUp` function using the due tasks as input.
 
 ## noteFollowUp
 

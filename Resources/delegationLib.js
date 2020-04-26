@@ -112,5 +112,30 @@
     }
   };
 
+  delegationLib.followUpDueToday = () => {
+    // configuration
+    config = PlugIn.find("com.KaitlinSalzke.Delegation").library(
+      "delegationConfig"
+    );
+    waitingTag = config.waitingTag();
+
+    today = Calendar.current.startOfDay(new Date());
+
+    dueToday = [];
+    waitingTag.remainingTasks.forEach((task) => {
+      if (
+        task.effectiveDueDate !== null &&
+        Calendar.current.startOfDay(task.effectiveDueDate).getTime() ===
+          today.getTime()
+      ) {
+        dueToday.push(task);
+      }
+    });
+
+    if (dueToday.length > 0) {
+      delegationLib.followUp(dueToday);
+    }
+  };
+
   return delegationLib;
 })();
