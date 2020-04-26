@@ -41,11 +41,20 @@ This action can be run on one or more selected tasks. For each task, it:
 Note that any project tags will also be inherited, unless they are specified as `uninheritedTags` in the configuration file.
 
 ## Follow Up
-This action can be run on one or more selected tasks.
+
+This action simply runs the `followUp` function (below) on one or more selected tasks.
+
+# Functions
+
+This plugin also contains the following function within the `delegationLib` library:
+
+## followUp
+
+This function takes an array of tasks as input.
 
 If more than one 'contact method' tag is listed in `followUpMethods` in the configuration file, this first prompts the user to select one of these to be applied. (By default, these are any children of the `Activity Type: Contact` tag).
 
-Then, for each selected task:
+Then, for each task in the array:
 1. If the task is not already contained within such an action group, creates a sequential action group with the same name as the selected task(s).
 2. Moves the task into the parent sequential action group.
 3. Creates a new task before the original task (and inside the action group) whose: 
@@ -57,10 +66,6 @@ Then, for each selected task:
    * note is a link to the original task in the format `[FOLLOWUPON: omnifocus///task/taskid]`
 
 Note that the parent sequential action group is created so that the 'waiting for' task only becomes available after the follow-up task has been completed (or dropped or deleted), even in a parallel project or single-action list.
-
-# Functions
-
-This plugin also contains the following function within the `delegationLib` library:
 
 ## noteFollowUp
 
