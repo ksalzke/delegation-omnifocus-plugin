@@ -5,14 +5,14 @@
     // edit the below line to configure the tag used to mark
     // tasks as waiting
     // THIS SHOULD BE A TAG OBJECT
-    return tagNamed("Activity Type").tagNamed("⏳ Waiting");
+    return tagsMatching("⏳ Waiting")[0];
   };
 
   delegationConfig.followUpMethods = () => {
     // edit the below line to configure the list of tags used
     // to mark different communication methods (i.e. means of follow-up)
     // THIS SHOULD BE AN ARRAY OF TAG OBJECTS
-    return tagNamed("Activity Type").tagNamed("Contact").children;
+    return tagsMatching("Contact")[0].children;
   };
 
   delegationConfig.defaultFollowUpMethod = () => {
@@ -20,14 +20,14 @@
     // method that should be selected in the form
     // THIS SHOULD BE A TAG OBJECT THAT IS INCLUDED IN THE
     // FOLLOW UP METHODS ABOVE
-    return tagNamed("Activity Type").tagNamed("Contact").tagNamed("📧 Email");
+    return tagsMatching("📧 Email")[0];
   };
 
   delegationConfig.uninheritedTags = () => {
     // edit the below line to configure the list of tags that
     // will NOT be inherited by 'follow up' or 'waiting' tasks
     // THIS SHOULD BE AN ARRAY OF TAG OBJECTS
-    return [tagNamed("▵")];
+    return [];
   };
 
   delegationConfig.functionsForOriginalTaskBeforeWaiting = () => {
