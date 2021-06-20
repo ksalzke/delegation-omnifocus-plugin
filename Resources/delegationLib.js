@@ -1,143 +1,143 @@
+/* global PlugIn Version Task moveTasks Form Calendar */
 (() => {
-  var delegationLib = new PlugIn.Library(new Version("1.0"));
+  const delegationLib = new PlugIn.Library(new Version('1.0'))
 
   delegationLib.followUp = (selectedTasks) => {
-    config = PlugIn.find("com.KaitlinSalzke.Delegation").library(
-      "delegationConfig"
-    );
+    const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
+      'delegationConfig'
+    )
 
     // configure tags
-    waitingTag = config.waitingTag();
-    followUpMethods = config.followUpMethods();
-    defaultFollowUpMethod = config.defaultFollowUpMethod();
+    const waitingTag = config.waitingTag()
+    const followUpMethods = config.followUpMethods()
+    const defaultFollowUpMethod = config.defaultFollowUpMethod()
 
     // uninherited tags to be removed
-    uninheritedTags = config.uninheritedTags();
+    let uninheritedTags = config.uninheritedTags()
 
     // also remove tags that are children of waiting tag
-    uninheritedTags = uninheritedTags.concat(waitingTag.children, waitingTag);
+    uninheritedTags = uninheritedTags.concat(waitingTag.children, waitingTag)
 
-    functionLibrary = PlugIn.find("com.KaitlinSalzke.functionLibrary").library(
-      "functionLibrary"
-    );
+    const functionLibrary = PlugIn.find('com.KaitlinSalzke.functionLibrary').library(
+      'functionLibrary'
+    )
 
-    function addFollowUpTask(taskArray, contactMethod) {
+    function addFollowUpTask (taskArray, contactMethod) {
       taskArray.forEach((task) => {
         // get parent task
-        parentTask = functionLibrary.getParent(task);
+        let parentTask = functionLibrary.getParent(task)
 
         if (!/^Waiting for: /.test(parentTask.name)) {
           // add parent action group
-          parentTask = new Task(task.name, task.before);
+          parentTask = new Task(task.name, task.before)
         }
 
         // move original task inside group
-        moveTasks([task], parentTask.ending);
+        moveTasks([task], parentTask.ending)
 
         // replace "Waiting for: " with "Follow up: " in task name
-        followUpTaskName = task.name.replace(
+        const followUpTaskName = task.name.replace(
           /^(?:Waiting for: )*/,
-          "Follow up: "
-        );
+          'Follow up: '
+        )
 
         // create task and add relevant tags and link to original task
-        followUpTask = new Task(followUpTaskName, task.before);
-        followUpTask.addTag(contactMethod);
-        followUpTask.addTags(task.tags);
-        followUpTask.removeTags(uninheritedTags);
+        const followUpTask = new Task(followUpTaskName, task.before)
+        followUpTask.addTag(contactMethod)
+        followUpTask.addTags(task.tags)
+        followUpTask.removeTags(uninheritedTags)
         followUpTask.note =
-          "[FOLLOWUPON: omnifocus:///task/" + task.id.primaryKey + "]";
-        followUpTask.dueDate = task.effectiveDueDate;
-        followUpTask.flagged = task.effectiveFlagged;
+          '[FOLLOWUPON: omnifocus:///task/' + task.id.primaryKey + ']'
+        followUpTask.dueDate = task.effectiveDueDate
+        followUpTask.flagged = task.effectiveFlagged
 
         // make the group sequential
-        parentTask.sequential = true;
-      });
+        parentTask.sequential = true
+      })
     }
 
     if (followUpMethods.length > 1) {
       // show form to select follow up method
-      var inputForm = new Form();
-      popupMenu = new Form.Field.Option(
-        "contactMethod",
-        "Contact Method",
+      const inputForm = new Form()
+      const popupMenu = new Form.Field.Option(
+        'contactMethod',
+        'Contact Method',
         followUpMethods,
         followUpMethods.map((tag) => tag.name),
         defaultFollowUpMethod
-      );
+      )
 
-      inputForm.addField(popupMenu);
+      inputForm.addField(popupMenu)
 
-      formPrompt = "Select contact method:";
-      formPromise = inputForm.show(formPrompt, "Continue");
+      const formPrompt = 'Select contact method:'
+      const formPromise = inputForm.show(formPrompt, 'Continue')
 
       inputForm.validate = function (formObject) {
-        validation = true;
-        return validation;
-      };
+        const validation = true
+        return validation
+      }
 
       // process results from form selection
       formPromise.then(function (formObject) {
-        selectedFollowUpMethod = formObject.values["contactMethod"];
-        addFollowUpTask(selectedTasks, formObject.values["contactMethod"]);
-      });
-    } else {
-      addFollowUpTask(selectedTasks, defaultFollowUpMethod);
-    }
+        addFollowUpTask(selectedTasks, formObject.values.contactMethod)
+      })
 
-    // log error if form is cancelled
-    formPromise.catch(function (err) {
-      console.log("form cancelled", err.message);
-    });
-  };
+      // log error if form is cancelled
+      formPromise.catch(function (err) {
+        console.log('form cancelled', err.message)
+      })
+    } else {
+      addFollowUpTask(selectedTasks, defaultFollowUpMethod)
+    }
+  }
 
   delegationLib.noteFollowUp = (task) => {
-    functionLibrary = PlugIn.find("com.KaitlinSalzke.functionLibrary").library(
-      "functionLibrary"
-    );
+    const functionLibrary = PlugIn.find('com.KaitlinSalzke.functionLibrary').library(
+      'functionLibrary'
+    )
 
     // if 'Follow up' task, make a note on original task when followed up on
     if (/[fF]ollow up/.test(task.name)) {
-      originalTaskRegex = /\[FOLLOWUPON: omnifocus:\/\/\/task\/(.+)\]/g;
-      originalTaskRegexResult = originalTaskRegex.exec(task.note);
+      const originalTaskRegex = /\[FOLLOWUPON: omnifocus:\/\/\/task\/(.+)\]/g
+      const originalTaskRegexResult = originalTaskRegex.exec(task.note)
 
       if (originalTaskRegexResult !== null) {
-        originalTaskId = originalTaskRegexResult[1];
-        originalTask = functionLibrary.getTaskWithId(originalTaskId);
+        const originalTaskId = originalTaskRegexResult[1]
+        const originalTask = functionLibrary.getTaskWithId(originalTaskId)
 
-        now = new Date();
+        const now = new Date()
 
         originalTask.note = `${
           originalTask.note
-        }\n\nFollowed up ${now.toString()}`;
+        }\n\nFollowed up ${now.toString()}`
       }
     }
-  };
+  }
 
   delegationLib.followUpDueToday = () => {
     // configuration
-    config = PlugIn.find("com.KaitlinSalzke.Delegation").library(
-      "delegationConfig"
-    );
-    waitingTag = config.waitingTag();
+    const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
+      'delegationConfig'
+    )
+    const waitingTag = config.waitingTag()
 
-    today = Calendar.current.startOfDay(new Date());
+    const today = Calendar.current.startOfDay(new Date())
 
-    dueToday = [];
+    const dueToday = []
     waitingTag.remainingTasks.forEach((task) => {
       if (
         task.effectiveDueDate !== null &&
         Calendar.current.startOfDay(task.effectiveDueDate).getTime() ===
           today.getTime()
       ) {
-        dueToday.push(task);
+        dueToday.push(task)
       }
-    });
+    })
 
     if (dueToday.length > 0) {
-      delegationLib.followUp(dueToday);
+      delegationLib.followUp(dueToday)
     }
-  };
+  }
 
-  return delegationLib;
-})();
+  return delegationLib
+})()
