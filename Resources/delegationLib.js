@@ -16,7 +16,7 @@
     let uninheritedTags = config.uninheritedTags()
 
     // also remove tags that are children of waiting tag
-    uninheritedTags = uninheritedTags.concat(waitingTag.children, waitingTag)
+    uninheritedTags = [...uninheritedTags, ...waitingTag.children, waitingTag]
 
     const functionLibrary = PlugIn.find('com.KaitlinSalzke.functionLibrary').library(
       'functionLibrary'
