@@ -6,13 +6,16 @@
   "version": "2.0.0",
   "actions": [
     {
-      "identifier": "waitingFor"
+      "identifier": "waitingFor",
+      "image": "hourglass"
     },
     {
-      "identifier": "followUp"
+      "identifier": "followUp",
+      "image": "bubble.left"
     },
     {
-      "identifier": "followUpDueToday"
+      "identifier": "followUpDueToday",
+      "image": "exclamationmark.bubble"
     }
   ],
   "libraries": [
