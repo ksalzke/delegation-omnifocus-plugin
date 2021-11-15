@@ -13,11 +13,7 @@ _Please note that all scripts on my GitHub account (or shared elsewhere) are wor
 
 **Important note: for this plug-in bundle to work correctly, my [Function Library for OmniFocus](https://github.com/ksalzke/function-library-for-omnifocus) is also required and needs to be added to the plug-in folder separately.**
 
-1. Click on the green `Clone or download` button above to download a `.zip` file of all the files in this GitHub repository.
-2. Unzip the downloaded file.
-3. Open the configuration file located at `Resources/delegationConfig.js` and make any changes needed to reflect your OmniFocus set-up. Further explanations of the options are included within that file as comments.
-4. Rename the entire folder to anything you like, with the extension `.omnifocusjs`
-5. Move the resulting file to your OmniFocus plug-in library folder.
+Forthcoming.
 
 # Actions
 
