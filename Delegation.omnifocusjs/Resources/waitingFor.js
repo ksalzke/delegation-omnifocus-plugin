@@ -1,6 +1,6 @@
 /* global PlugIn Form Task settings */
 (() => {
-  const action = new PlugIn.Action(function (selection, sender) {
+  const action = new PlugIn.Action(async function (selection, sender) {
     const config = this.delegationConfig
 
     // configuration
@@ -16,12 +16,9 @@
 
     const tasks = selection.tasks
 
-    asyncForEach(tasks, async (task) => {
-      // do functions set up in config file first
-      config.functionsForOriginalTaskBeforeWaiting().forEach((func) => {
-        func(task)
-      })
+    tasks.forEach(async task => {
 
+      task.markComplete()
       // set up defaults for new 'waiting' task
       // -- task name
       let waitingForTaskName = task.name
@@ -58,7 +55,7 @@
       let dueDate = null
 
       // if showForm is set to true in config, show form to edit task
-      if (showForm === true) {
+      if (showForm) {
         const inputForm = new Form()
         const nameField = new Form.Field.String(
           'taskName',
@@ -98,9 +95,3 @@
 
   return action
 })()
-
-async function asyncForEach (array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array)
-  }
-}
