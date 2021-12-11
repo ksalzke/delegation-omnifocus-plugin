@@ -6,14 +6,15 @@ _Please note that all scripts on my GitHub account (or shared elsewhere) are wor
 
 ## Known issues 
 
-* These scripts do not currently appear to function correctly on tasks in the inbox.
-* The first time the 'Waiting For' action is run it does not do anything. Subsequent attempts appear to be working correctly.
+Refer to ['issues'](https://github.com/ksalzke/delegation-omnifocus-plugin/issues) for known issues and planned changes/enhancements.
 
 # Installation & Set-Up
 
-**Important note: for this plug-in bundle to work correctly, my [Function Library for OmniFocus](https://github.com/ksalzke/function-library-for-omnifocus) is also required and needs to be added to the plug-in folder separately.**
+1. Download the [latest release](https://github.com/ksalzke/delegation-omnifocus-plugin/releases/latest).
+2. Unzip the downloaded file.
+3. Move the `.omnifocusjs` file to your OmniFocus plug-in library folder (or open it to install).
 
-Forthcoming.
+**Important note: for this plug-in bundle to work correctly, my [Function Library for OmniFocus](https://github.com/ksalzke/function-library-for-omnifocus) is also required and needs to be added to the plug-in folder separately.**
 
 # Actions
 
