@@ -2,6 +2,31 @@
 (() => {
   const delegationLib = new PlugIn.Library(new Version('1.0'))
 
+  delegationLib.loadSyncedPrefs = () => {
+    const syncedPrefsPlugin = PlugIn.find('com.KaitlinSalzke.SyncedPrefLibrary')
+
+    if (syncedPrefsPlugin !== null) {
+      const SyncedPref = syncedPrefsPlugin.library('syncedPrefLibrary').SyncedPref
+      return new SyncedPref('com.KaitlinSalzke.Delegation')
+    } else {
+      const alert = new Alert(
+        'Synced Preferences Library Required',
+        'For the Delegation plug-in to work correctly, the \'Synced Preferences for OmniFocus\' plugin(https://github.com/ksalzke/synced-preferences-for-omnifocus) is also required and needs to be added to the plug-in folder separately. Either you do not currently have this plugin installed, or it is not installed correctly.'
+      )
+      alert.show()
+    }
+  }
+
+  delegationLib.getWaitingTag = () => {
+    console.log('getting waiting tag')
+    const preferences = delegationLib.loadSyncedPrefs()
+    console.log('got synced prefs')
+    const tagID = preferences.readString('waitingTagID')
+
+    if (tagID !== null) return Tag.byIdentifier(tagID)
+    else return null
+  }
+
   delegationLib.followUp = (selectedTasks) => {
     const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
       'delegationConfig'

@@ -16,6 +16,10 @@
     {
       "identifier": "followUpDueToday",
       "image": "exclamationmark.bubble"
+    },
+    {
+      "identifier": "preferences",
+      "image": "gear"
     }
   ],
   "libraries": [
