@@ -3,8 +3,10 @@
   const action = new PlugIn.Action(async function (selection, sender) {
     const config = this.delegationConfig
 
+    const lib = this.delegationLib
+
     // configuration
-    const waitingTag = config.waitingTag()
+    const waitingTag = lib.getWaitingTag()
     const uninheritedTags = config.uninheritedTags()
     const showForm = config.showForm()
     const defaultDeferDays = config.defaultDeferDays()

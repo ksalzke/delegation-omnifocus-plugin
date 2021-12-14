@@ -18,9 +18,7 @@
   }
 
   delegationLib.getWaitingTag = () => {
-    console.log('getting waiting tag')
     const preferences = delegationLib.loadSyncedPrefs()
-    console.log('got synced prefs')
     const tagID = preferences.readString('waitingTagID')
 
     if (tagID !== null) return Tag.byIdentifier(tagID)
@@ -33,7 +31,7 @@
     )
 
     // configure tags
-    const waitingTag = config.waitingTag()
+    const waitingTag = delegationLib.getWaitingTag()
     const followUpMethods = config.followUpMethods()
     const defaultFollowUpMethod = config.defaultFollowUpMethod()
 
@@ -140,7 +138,7 @@
     const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
       'delegationConfig'
     )
-    const waitingTag = config.waitingTag()
+    const waitingTag = delegationLib.getWaitingTag()
 
     const today = Calendar.current.startOfDay(new Date())
 
