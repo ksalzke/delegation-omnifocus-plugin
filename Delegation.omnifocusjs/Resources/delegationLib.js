@@ -25,6 +25,21 @@
     else return null
   }
 
+  delegationLib.getContactTag = () => {
+    const preferences = delegationLib.loadSyncedPrefs()
+    const tagID = preferences.readString('contactTagID')
+
+    if (tagID !== null) return Tag.byIdentifier(tagID)
+    else return null
+  }
+
+  delegationLib.getContactTags = () => {
+    const contactTag = delegationLib.getContactTag()
+    if (contactTag === null) return []
+    else if (contactTag.children.length === 0) return [contactTag]
+    else return contactTag.children
+  }
+
   delegationLib.followUp = (selectedTasks) => {
     const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
       'delegationConfig'
@@ -32,14 +47,14 @@
 
     // configure tags
     const waitingTag = delegationLib.getWaitingTag()
-    const followUpMethods = config.followUpMethods()
+    const followUpMethods = delegationLib.getContactTags()
     const defaultFollowUpMethod = config.defaultFollowUpMethod()
 
     // uninherited tags to be removed
     let uninheritedTags = config.uninheritedTags()
 
     // also remove tags that are children of waiting tag
-    uninheritedTags = [...uninheritedTags, ...waitingTag.children, waitingTag]
+    uninheritedTags = (waitingTag !== null) ? [...uninheritedTags, ...waitingTag.children, waitingTag] : uninheritedTags
 
     const functionLibrary = PlugIn.find('com.KaitlinSalzke.functionLibrary').library(
       'functionLibrary'
