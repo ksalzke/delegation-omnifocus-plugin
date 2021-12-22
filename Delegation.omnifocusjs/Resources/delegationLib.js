@@ -40,6 +40,14 @@
     else return contactTag.children
   }
 
+  delegationLib.getDefaultContactTag = () => {
+    const preferences = delegationLib.loadSyncedPrefs()
+    const tagID = preferences.readString('defaultContactTagID')
+
+    if (tagID !== null) return Tag.byIdentifier(tagID)
+    else return null
+  }
+
   delegationLib.followUp = (selectedTasks) => {
     const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
       'delegationConfig'
