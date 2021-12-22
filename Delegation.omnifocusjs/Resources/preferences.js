@@ -10,7 +10,9 @@
     // create and show form
     const form = new Form()
     form.addField(new Form.Field.Option('waitingTag', 'Waiting Tag', flattenedTags, flattenedTags.map(t => t.name), waitingTag, null))
-    form.addField(new Form.Field.Option('contactTag', 'Contact Method Tag', flattenedTags, flattenedTags.map(t => t.name), contactTag, null))
+    const contactTagField = new Form.Field.Option('contactTag', 'Contact Method Tag', flattenedTags, flattenedTags.map(t => t.name), contactTag, 'None')
+    contactTagField.allowsNull = true
+    form.addField(contactTagField)
     await form.show('Preferences: Dependency', 'OK')
 
     // save preferences
