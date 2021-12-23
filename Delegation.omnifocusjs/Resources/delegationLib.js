@@ -1,4 +1,4 @@
-/* global PlugIn Version Task moveTasks Form Calendar */
+/* global PlugIn Version Task moveTasks Form Calendar Tag Alert */
 (() => {
   const delegationLib = new PlugIn.Library(new Version('1.0'))
 
@@ -56,7 +56,7 @@
     // configure tags
     const waitingTag = delegationLib.getWaitingTag()
     const followUpMethods = delegationLib.getContactTags()
-    const defaultFollowUpMethod = config.defaultFollowUpMethod()
+    const defaultFollowUpMethod = delegationLib.getDefaultContactTag()
 
     // uninherited tags to be removed
     let uninheritedTags = config.uninheritedTags()
@@ -158,11 +158,7 @@
 
   delegationLib.followUpDueToday = () => {
     // configuration
-    const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
-      'delegationConfig'
-    )
     const waitingTag = delegationLib.getWaitingTag()
-
     const today = Calendar.current.startOfDay(new Date())
 
     const dueToday = []
