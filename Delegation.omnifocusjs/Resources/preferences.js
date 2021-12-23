@@ -17,6 +17,7 @@
     contactTagField.allowsNull = true
     let selectedContactTag = contactTag
     form.addField(contactTagField)
+    let selectedDefaultTag = defaultContactTag
 
     const generateDefaultContactTagField = () => {
       // if no contact tag selected or no children don't add 'default' field
@@ -25,7 +26,10 @@
 
       // add updated default contact method field
       const contactTags = form.values.contactTag.flattenedChildren
-      form.addField(new Form.Field.Option('defaultContactTag', 'Default Contact Method', contactTags, contactTags.map(t => t.name), defaultContactTag, 'None'))
+      if (!contactTags.includes(selectedDefaultTag)) {
+        selectedDefaultTag = null
+      }
+      form.addField(new Form.Field.Option('defaultContactTag', 'Default Contact Method', contactTags, contactTags.map(t => t.name), selectedDefaultTag, 'None'))
       selectedContactTag = form.values.contactTag
       return true
     }
@@ -33,12 +37,15 @@
     if (contactTag !== null) generateDefaultContactTagField(contactTag)
 
     form.validate = form => {
-      // don't update if no change
+      // don't update if no change to contact tag
       if (form.values.contactTag === selectedContactTag) return true
 
       // remove field if it already exists
       const defaultContactTagField = form.fields.find(field => field.key === 'defaultContactTag')
-      if (defaultContactTagField !== undefined) form.removeField(defaultContactTagField)
+      if (defaultContactTagField !== undefined) {
+        selectedDefaultTag = form.fields.defaultContactTag
+        form.removeField(defaultContactTagField)
+      }
 
       generateDefaultContactTagField()
       return true
