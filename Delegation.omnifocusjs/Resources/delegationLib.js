@@ -1,6 +1,52 @@
-/* global PlugIn Version Task moveTasks Form Calendar */
+/* global PlugIn Version Task moveTasks Form Calendar Tag Alert */
 (() => {
   const delegationLib = new PlugIn.Library(new Version('1.0'))
+
+  delegationLib.loadSyncedPrefs = () => {
+    const syncedPrefsPlugin = PlugIn.find('com.KaitlinSalzke.SyncedPrefLibrary')
+
+    if (syncedPrefsPlugin !== null) {
+      const SyncedPref = syncedPrefsPlugin.library('syncedPrefLibrary').SyncedPref
+      return new SyncedPref('com.KaitlinSalzke.Delegation')
+    } else {
+      const alert = new Alert(
+        'Synced Preferences Library Required',
+        'For the Delegation plug-in to work correctly, the \'Synced Preferences for OmniFocus\' plugin(https://github.com/ksalzke/synced-preferences-for-omnifocus) is also required and needs to be added to the plug-in folder separately. Either you do not currently have this plugin installed, or it is not installed correctly.'
+      )
+      alert.show()
+    }
+  }
+
+  delegationLib.getWaitingTag = () => {
+    const preferences = delegationLib.loadSyncedPrefs()
+    const tagID = preferences.readString('waitingTagID')
+
+    if (tagID !== null) return Tag.byIdentifier(tagID)
+    else return null
+  }
+
+  delegationLib.getContactTag = () => {
+    const preferences = delegationLib.loadSyncedPrefs()
+    const tagID = preferences.readString('contactTagID')
+
+    if (tagID !== null) return Tag.byIdentifier(tagID)
+    else return null
+  }
+
+  delegationLib.getContactTags = () => {
+    const contactTag = delegationLib.getContactTag()
+    if (contactTag === null) return []
+    else if (contactTag.children.length === 0) return [contactTag]
+    else return contactTag.children
+  }
+
+  delegationLib.getDefaultContactTag = () => {
+    const preferences = delegationLib.loadSyncedPrefs()
+    const tagID = preferences.readString('defaultContactTagID')
+
+    if (tagID !== null) return Tag.byIdentifier(tagID)
+    else return null
+  }
 
   delegationLib.followUp = (selectedTasks) => {
     const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
@@ -8,15 +54,15 @@
     )
 
     // configure tags
-    const waitingTag = config.waitingTag()
-    const followUpMethods = config.followUpMethods()
-    const defaultFollowUpMethod = config.defaultFollowUpMethod()
+    const waitingTag = delegationLib.getWaitingTag()
+    const followUpMethods = delegationLib.getContactTags()
+    const defaultFollowUpMethod = delegationLib.getDefaultContactTag()
 
     // uninherited tags to be removed
     let uninheritedTags = config.uninheritedTags()
 
     // also remove tags that are children of waiting tag
-    uninheritedTags = [...uninheritedTags, ...waitingTag.children, waitingTag]
+    uninheritedTags = (waitingTag !== null) ? [...uninheritedTags, ...waitingTag.children, waitingTag] : uninheritedTags
 
     const functionLibrary = PlugIn.find('com.KaitlinSalzke.functionLibrary').library(
       'functionLibrary'
@@ -112,11 +158,7 @@
 
   delegationLib.followUpDueToday = () => {
     // configuration
-    const config = PlugIn.find('com.KaitlinSalzke.Delegation').library(
-      'delegationConfig'
-    )
-    const waitingTag = config.waitingTag()
-
+    const waitingTag = delegationLib.getWaitingTag()
     const today = Calendar.current.startOfDay(new Date())
 
     const dueToday = []
