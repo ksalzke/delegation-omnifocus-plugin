@@ -92,10 +92,6 @@
   }
 
   delegationLib.noteFollowUp = (task) => {
-    const functionLibrary = PlugIn.find('com.KaitlinSalzke.functionLibrary').library(
-      'functionLibrary'
-    )
-
     // if 'Follow up' task, make a note on original task when followed up on
     if (/[fF]ollow up/.test(task.name)) {
       const originalTaskRegex = /\[FOLLOWUPON: omnifocus:\/\/\/task\/(.+)\]/g
@@ -103,7 +99,7 @@
 
       if (originalTaskRegexResult !== null) {
         const originalTaskId = originalTaskRegexResult[1]
-        const originalTask = functionLibrary.getTaskWithId(originalTaskId)
+        const originalTask = Task.byIdentifier(originalTaskId)
 
         const now = new Date()
 

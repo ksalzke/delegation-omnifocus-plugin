@@ -31,22 +31,6 @@
     return []
   }
 
-  delegationConfig.functionsForOriginalTaskBeforeWaiting = () => {
-    // edit the below to configure the function(s) that will be
-    // run on the original task before the 'waiting' task is created,
-    // including the action to complete the original task
-    // THIS SHOULD BE AN ARRAY OF FUNCTIONS
-    const customCompletePlugin = PlugIn.find('com.KaitlinSalzke.customComplete')
-    if (customCompletePlugin !== null) {
-      return [customCompletePlugin.library('customCompleteLib').customComplete]
-    } else {
-      const basicCompleteFunction = (task) => {
-        task.markComplete()
-      }
-      return [basicCompleteFunction]
-    }
-  }
-
   delegationConfig.showForm = () => {
     // edit the below to configure whether a form is shown
     // to edit the 'waiting for' task
